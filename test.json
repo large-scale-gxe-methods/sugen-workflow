@@ -1,0 +1,12 @@
+{
+  "run_sugen.genofiles": ["testfiles/chr22subset.dose.vcf.gz"],
+  "run_sugen.phenofile": "testfiles/chr22subset.dose.pheno",
+  "run_sugen.sample_id_header": "sampleid",
+  "run_sugen.outcome": "pheno1",
+  "run_sugen.binary_outcome": "false",
+  "run_sugen.exposure_names": "exp1",
+  "run_sugen.delimiter": " ",
+  "run_sugen.missing": "NA",
+  "run_sugen.robust": "true",
+  "run_sugen.memory": "1"
+}
