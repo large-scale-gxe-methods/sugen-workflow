@@ -8,6 +8,7 @@ task process_phenos {
 	String covar_names
 	String? delimiter
 	String? missing
+	Int ppmem
 
 	command {
 		python3 /format_sugen_phenos.py ${phenofile} ${sample_id_header} ${outcome} ${exposure} "${covar_names}" "${delimiter}" ${missing} "${idfile}"
@@ -15,7 +16,7 @@ task process_phenos {
 
 	runtime {
 		docker: "quay.io/large-scale-gxe-methods/sugen-workflow"
-		memory: "2 GB"
+		memory: ppmem + "GB"
 	}
 
         output {
@@ -65,6 +66,8 @@ task run_interaction {
 		docker: "quay.io/large-scale-gxe-methods/sugen-workflow"
 		memory: "${memory} GB"
 		disks: "local-disk ${disk} HDD"
+		gpu: false
+		dx_timeout: "7D0H00M"
 	}
 
         output {
@@ -129,6 +132,8 @@ workflow run_sugen {
 	Int? disk = 20
 	Int? monitoring_freq = 1
 
+	Int ppmem = 2 * ceil(size(phenofile, "GB")) + 1
+
 	call process_phenos {
 		input:
 			phenofile = phenofile,
@@ -137,7 +142,8 @@ workflow run_sugen {
 			exposure = exposure_names,
 			covar_names = covar_names,
 			delimiter = delimiter,
-			missing = missing
+			missing = missing,
+			ppmem = ppmem
 	}
 	
 	scatter (i in range(length(genofiles))) {
